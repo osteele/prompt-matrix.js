@@ -1,7 +1,38 @@
 # Prompt Matrix
 
+[![npm version](https://badge.fury.io/js/prompt-matrix.svg)](https://badge.fury.io/js/prompt-matrix)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Prompt Matrix is a small library that expands a string that specifies a prompt
-matrix into a list of strings.
+matrix into a list of strings. For example, the string `"The <dog|cat> in the
+hat"` expands to the list `["The dog in the hat", "The cat in the hat"]`.
+
+The motivating case for this package is to compare the effects of different
+prompts in text and image generation systems such as Stable Diffusion and GPT-3.
+
+## Features
+
+A prompt string may contain multiple alternations. For example, `"The <dog|cat>
+in the <cardigan|hat>"` produces a list of the four strings `"The dog in the
+cardigan"`, `"The dog in the hat"`, `"The cat in the cardigan"`, and `"The cat
+in the hat"`.
+
+A prompt string may contain nested alternations. For example, `"The
+<<small|large> dog|cat>"` produces the strings `"The small dog"`, `"The large
+do"`, and `"The cat"`.
+
+Brackets `[]` enclose optional elements. For example, `"The [small] cat"` is
+equivalent to `"The <small,> cat"`, and both produce the strings `"The small
+cat"` and `"The  cat"`.
+
+The special characters `<>{}|` can be replaced by different strings, or disabled
+by specifying
+`None` or the empty string.
+
+> **Note**: The disjunction is bounded by the enclosing brackets, if any. `"The
+dog|cat in the cardigan|hat"` generates the three strings `"The dog"`, `"cat in
+the gardigan"`, and `"hat"`. This is in contrast to some other systems, that
+scope a disjunction to the text delimited by surrounding whitespace.
 
 ## Installation
 
@@ -18,7 +49,7 @@ iterExpand. Both take a string that specifies a prompt matrix and return an
 array of strings that are the expansion of the prompt matrix.
 
 ```typescript
-import { expand } from 'prompt-matrix';
+import { expandPrompt } from 'prompt-matrix';
 
 const prompt = "<hi|hello> <there|you>";
 const expansion = expandPrompt(prompt);
@@ -46,78 +77,55 @@ combinations at once might be memory-intensive.
 Example 1: Basic usage
 
 ```typescript
-const string = "<I|We> love <coding|programming>";
+const string = "The <dog|cat> in the hat";
 const result = expandPrompt(string);
 console.log(result);
 // Output:
-// [ 'I love coding',
-//   'I love programming',
-//   'We love coding',
-//   'We love programming' ]
+// ["The dog in the hat",
+//  "The cat in the hat"]
 ```
 
-Example 2: Using custom brackets and separator
+Example 2: Using multiple alternations
 
 ```typescript
-const string = "{A,B,C}|{1,2,3}|{X,Y,Z}";
-const brackets = ["{", "}"];
-const separator = ",";
-const result = expandPrompt(string, brackets, separator);
+const string = "The <dog|cat> in the <cardigan|hat>";
+const result = expandPrompt(string);
 console.log(result);
 // Output:
-// [ 'A,1,X', 'A,1,Y', 'A,1,Z', 'A,2,X', 'A,2,Y', 'A,2,Z', 'A,3,X', 'A,3,Y', 'A,3,Z',
-//   'B,1,X', 'B,1,Y', 'B,1,Z', 'B,2,X', 'B,2,Y', 'B,2,Z', 'B,3,X', 'B,3,Y', 'B,3,Z',
-//   'C,1,X', 'C,1,Y', 'C,1,Z', 'C,2,X', 'C,2,Y', 'C,2,Z', 'C,3,X', 'C,3,Y', 'C,3,Z' ]
+// ["The dog in the cardigan",
+//  "The dog in the hat",
+//  "The cat in the cardigan",
+//  "The cat in the hat"]
 ```
 
 Example 3: Using nested brackets
 
 ```typescript
-const string = "<A<B<C|D>|E>|F>";
+const string = "The <<small|large> <brown|black> dog|<red|blue> fish>";
 const result = expandPrompt(string);
 console.log(result);
 // Output:
-// [ 'ABC', 'ABD', 'AE', 'F' ]
+// ["The small brown dog",
+//  "The small black dog",
+//  "The large brown dog",
+//  "The large black dog",
+//  "The red fish",
+//  "The blue fish"]
 ```
 
-Example 4: Using escaped characters
+Example 4: Using custom brackets and separator
 
 ```typescript
-const string = "The value is <1\\,000|2\\,000|3\\,000>";
-const result = expandPrompt(string);
+const string = "The {dog,cat} in the {cardigan,hat}";
+const alternator = ",";
+const brackets = ["{", "}"];
+const result = expandPrompt(string, {alternator, brackets});
 console.log(result);
 // Output:
-// [ 'The value is 1,000', 'The value is 2,000', 'The value is 3,000' ]
-```
-
-Example 5: Using a single option
-
-```typescript
-const string = "<Option>";
-const result = expandPrompt(string);
-console.log(result);
-// Output:
-// [ 'Option' ]
-```
-
-Example 6: Using an empty string
-
-```typescript
-const string = "<Option1||Option2>";
-const result = expandPrompt(string);
-console.log(result);
-// Output:
-// [ 'Option1', '', 'Option2' ]
-```
-
-Example 7: Using a combination of nested brackets and empty strings
-
-```typescript
-const string = "<A<B||C<D|E>|F>|G>";
-const result = expandPrompt(string);
-console.log(result);
-// Output:
-// [ 'ABF', 'ACD', 'ACE', 'G' ]
+// ["The dog in the cardigan",
+//  "The dog in the hat",
+//  "The cat in the cardigan",
+//  "The cat in the hat"]
 ```
 
 ## License

@@ -26,6 +26,24 @@ describe("expand", () => {
     expect(expandPrompt(prompt)).toEqual(expected);
   });
 
+  it("should expand an alternation that includes a single option", () => {
+    const prompt = "<a>";
+    const expected = ["a"];
+    expect(expandPrompt(prompt)).toEqual(expected);
+  });
+
+  it("should expand an alternation that includes an empty string", () => {
+    const prompt = "<a||b>";
+    const expected = ["a", "", "b"];
+    expect(expandPrompt(prompt)).toEqual(expected);
+  });
+
+  it("should expand an alternation that includes a combination of nested brackets and empty strings", () => {
+    const prompt = "<a<b||c<d|e>|f>|g>";
+    const expected = ["ab", "a", "acd", "ace", "af", "g"];
+    expect(expandPrompt(prompt)).toEqual(expected);
+  });
+
   it("should throw an error for an unmatched opening angle bracket", () => {
     const prompt = "<a|b";
     expect(() => expandPrompt(prompt)).toThrow(SyntaxErrorException);
