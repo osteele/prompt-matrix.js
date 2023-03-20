@@ -3,9 +3,9 @@
 [![npm version](https://badge.fury.io/js/prompt-matrix.svg)](https://badge.fury.io/js/prompt-matrix)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Prompt Matrix is a small library that expands a string that specifies a prompt
-matrix into a list of strings. For example, the string `"The <dog|cat> in the
-hat"` expands to the list `["The dog in the hat", "The cat in the hat"]`.
+Prompt Matrix is a small JavaScript library that expands a string that specifies
+a prompt matrix into a list of strings. For example, the string `"The <dog|cat>
+in the hat"` expands to the list `["The dog in the hat", "The cat in the hat"]`.
 
 The motivating case for this package is to compare the effects of different
 prompts in text and image generation systems such as Stable Diffusion and GPT-3.
@@ -27,6 +27,8 @@ cat"` and `"The  cat"`.
 
 The special characters `<>{}|` can be replaced by different strings, or disabled
 by specifying `None` or the empty string.
+
+Provides TypeScript declarations.
 
 > **Note**: The disjunction is bounded by the enclosing brackets, if any. `"The
 dog|cat in the cardigan|hat"` generates the three strings `"The dog"`, `"cat in
@@ -125,6 +127,11 @@ console.log(result);
 //  "The cat in the cardigan",
 //  "The cat in the hat"]
 ```
+
+## Also See
+
+The Python version of this library is at
+<https://github.com/osteele/prompt-matrix.py>.
 
 ## License
 
