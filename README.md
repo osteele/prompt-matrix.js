@@ -26,8 +26,7 @@ equivalent to `"The <small,> cat"`, and both produce the strings `"The small
 cat"` and `"The  cat"`.
 
 The special characters `<>{}|` can be replaced by different strings, or disabled
-by specifying
-`None` or the empty string.
+by specifying `None` or the empty string.
 
 > **Note**: The disjunction is bounded by the enclosing brackets, if any. `"The
 dog|cat in the cardigan|hat"` generates the three strings `"The dog"`, `"cat in
@@ -44,9 +43,12 @@ npm install prompt-matrix
 
 ## Usage
 
-Prompt Matrix provides two functions for expanding a prompt matrix: expand and
-iterExpand. Both take a string that specifies a prompt matrix and return an
-array of strings that are the expansion of the prompt matrix.
+Prompt Matrix provides two functions for expanding a prompt matrix:
+`expandPrompt` and `generatePromptExpansions`. Both take a string that specifies
+a prompt matrix.
+
+**`expandPrompt`** returns an array of strings with all possible combinations of the
+prompt matrix elements.
 
 ```typescript
 import { expandPrompt } from 'prompt-matrix';
@@ -56,8 +58,8 @@ const expansion = expandPrompt(prompt);
 console.log(expansion); // ["hi there", "hi you", "hello there", "hello you"]
 ```
 
-`expandPrompt` returns an array of strings with all possible combinations of the
-prompt matrix elements.
+**`generatePromptExpansions`** returns a generator that yields the expansions one by
+one.
 
 ```typescript
 import { generatePromptExpansions } from 'prompt-matrix';
@@ -68,11 +70,7 @@ for (const expansion of generatePromptExpansions(prompt)) {
 }
 ```
 
-`generatePromptExpansions` returns a generator that yields the expansions one by one, which
-can be useful for large prompt matrices where generating all possible
-combinations at once might be memory-intensive.
-
-## Examples
+### Examples
 
 Example 1: Basic usage
 
