@@ -1,11 +1,15 @@
 {
   "name": "prompt-matrix",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A utility to expand a prompt matrix string, that contains alternations and optional substrings, into a list of strings.",
-  "main": "dist/expandPrompt.js",
-  "types": "dist/expandPrompt.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
   "scripts": {
-    "build": "tsc",
+    "build": "npm run clean && tsc",
+    "clean": "rm -rf dist",
     "test": "jest src",
     "test:watch": "jest --watch src",
     "format": "prettier --write src",
