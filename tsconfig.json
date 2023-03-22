@@ -1,14 +1,18 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+    "lib": [
+      "es2017",
+      "dom"
+    ],
     "esModuleInterop": true,
     "target": "es6",
     "moduleResolution": "node",
     "declaration": true,
     "outDir": "dist",
     "strict": true,
-    "sourceMap": true,
     "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
     "src/**/*"
